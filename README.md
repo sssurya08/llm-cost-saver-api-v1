@@ -1,5 +1,7 @@
 # LLM Cost Saver API
 
+**Public API URL:** [https://llm-cost-saver-api-v1.onrender.com](https://llm-cost-saver-api-v1.onrender.com)
+
 A simple API that automatically routes your LLM requests to the cheapest model that can handle the job — saving you money without changing how you build.
 
 ---
@@ -13,13 +15,15 @@ Instead of always sending every request to an expensive model, this API looks at
 ## Setup
 
 **Base URL**
+
 ```
-http://localhost:8000
+https://llm-cost-saver-api-v1.onrender.com
 ```
 
 **Authentication**
 
 Every request to `/chat` requires an API key passed as a Bearer token in the `Authorization` header:
+
 ```
 Authorization: Bearer testkey123
 ```
@@ -33,6 +37,7 @@ Authorization: Bearer testkey123
 Send a prompt and get a response back from the best model for the job.
 
 **Request JSON**
+
 ```json
 {
   "prompt": "Summarize the French Revolution in one sentence.",
@@ -41,6 +46,7 @@ Send a prompt and get a response back from the best model for the job.
 ```
 
 **Response JSON**
+
 ```json
 {
   "response": "The French Revolution was a period of radical political and societal change in France from 1789 to 1799.",
@@ -56,19 +62,21 @@ Send a prompt and get a response back from the best model for the job.
 ## Calling /chat
 
 ### curl
+
 ```bash
-curl -X POST http://localhost:8000/chat \
+curl -X POST https://llm-cost-saver-api-v1.onrender.com/chat \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer testkey123" \
   -d '{"prompt": "Summarize the French Revolution in one sentence.", "mode": "cheap"}'
 ```
 
 ### Python
+
 ```python
 import requests
 
 response = requests.post(
-    "http://localhost:8000/chat",
+    "https://llm-cost-saver-api-v1.onrender.com/chat",
     headers={
         "Authorization": "Bearer testkey123",
         "Content-Type": "application/json",
@@ -84,12 +92,24 @@ print(response.json())
 
 ---
 
+## Demo Endpoint
+
+For non-technical users, try the demo endpoint:
+
+```
+GET https://llm-cost-saver-api-v1.onrender.com/chat/demo
+```
+
+No API key required — returns a sample response.
+
+---
+
 ## Modes
 
-| Mode | Behavior |
-|------|----------|
-| `cheap` | Routes to the cheapest model if the prompt is under 200 tokens. Best for simple or short tasks. |
-| `fast` | Routes to the expensive model regardless of prompt length. Use for complex tasks that need higher quality. |
+| Mode    | Behavior                                                                                                   |
+| ------- | ---------------------------------------------------------------------------------------------------------- |
+| `cheap` | Routes to the cheapest model if the prompt is under 200 tokens. Best for simple or short tasks.            |
+| `fast`  | Routes to the expensive model regardless of prompt length. Use for complex tasks that need higher quality. |
 
 ---
 
@@ -99,15 +119,19 @@ print(response.json())
 
 **`estimated_savings`** — how much you saved compared to if you had sent the same request to the expensive model every time. This is always `0.00` when the expensive model is used, and a positive number whenever the cheap model is used instead.
 
-These fields are returned on every response so you can track your savings over time. All logged requests are also stored and viewable at `GET /logs`.
+These fields are returned on every response so you can track your savings over time. All logged requests are also stored and viewable at:
+
+```
+GET https://llm-cost-saver-api-v1.onrender.com/logs
+```
 
 ---
 
 ## Other Endpoints
 
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/` | GET | Health check — confirms the API is running |
-| `/chat/demo` | GET | Returns a sample response without needing to POST |
-| `/logs` | GET | Returns all logged requests from the database |
-| `/docs` | GET | Interactive Swagger UI for testing the API |
+| Endpoint     | Method | Description                                       |
+| ------------ | ------ | ------------------------------------------------- |
+| `/`          | GET    | Health check — confirms the API is running        |
+| `/chat/demo` | GET    | Returns a sample response without needing to POST |
+| `/logs`      | GET    | Returns all logged requests from the database     |
+| `/docs`      | GET    | Interactive Swagger UI for testing the API        |
