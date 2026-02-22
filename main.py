@@ -77,7 +77,7 @@ async def root():
     return {"message": "Chat API is running. POST to /chat to use it."}
 
 
-@app.get("/chat/demo")
+@app.get("/chat/demo", response_model=ChatResponse)
 async def chat_demo():
     model = choose_model("Hello world this is a test", "cheap")
     estimated_cost, estimated_savings, tokens = calculate_cost(model, "Hello world this is a test")
